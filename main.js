@@ -1,12 +1,25 @@
-const { app, BrowserWindow } = require('electron/main')
+const { app, BrowserWindow } = require('electron/main');
+const windowStateKeeper = require('electron-window-state');
 
 const createWindow = () => {
+    let mainWindowState = windowStateKeeper({
+        defaultWidth: 1200,
+        defaultHeight: 1000
+    });
+
     const win = new BrowserWindow({
-        width: 800,
-        height: 600
+        'x': mainWindowState.x,
+        'y': mainWindowState.y,
+        'width': mainWindowState.width,
+        'height': mainWindowState.height
     })
 
+    win.webContents.openDevTools({
+        mode: "right",
+    });
+
     void win.loadFile('index.html')
+    mainWindowState.manage(win);
 }
 
 app.whenReady().then(() => {
